@@ -13,14 +13,14 @@ library(lattice)
 library(latticeExtra)
 library(RColorBrewer)
 
-setwd("C:/Users/tomsp/Desktop/Masters/Practice_thesis/Masters/")
-
-
-bind <- readRDS("Processed_data/SST/OSPO_full.Rds")
 
 
 
-our_nc_data <- nc_open("C:/Users/tomsp/Desktop/Masters/Practice_thesis/data/Dist2Coast/Full.nc")
+bind <- readRDS("Processed_data/SST/Standard/OSTIA_full.Rds")
+
+
+
+our_nc_data <- nc_open("Raw_data/Full.nc")
 
 transects_func <- function(df){
   
@@ -53,7 +53,7 @@ transects_func <- function(df){
   
   
   
-  SA_bath <- transects(SA_west_coast, spread = 30)
+  SA_bath <- transects(SA_west_coast, spread = 60)
   
   
   
@@ -241,6 +241,8 @@ ggplot(slope %>%
   ylab("Latitude") +
   labs(color='SST Gradient') +
   ggtitle("OSTIA")
+
+
 
 ost_sbus <- ggplot(sbus, aes(x = lon, y = lat)) +
   geom_contour(data = bath, aes(z = bathy), colour = "black", alpha = 0.6) +
