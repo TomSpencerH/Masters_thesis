@@ -1,0 +1,278 @@
+---
+title: "Relevant_papers"
+format: html
+editor: visual
+---
+
+## Papers for Thesis:
+
+#### **Satellite Sea Surface Temperature Product Comparison for the Southern African Marine Region:**
+
+-   <div>
+
+    -   Introduction holds valuable insight into potential talking points in the intro to research chapter 1.
+
+    </div>
+
+-   <div>
+
+    -   Calculated variance between SST values of each data product for each grid cell. Individual variance was then averaged over a common three year period, providing mean variance per pixel across all SST data products. The calculation was repeated for low, medium and high resolution products.
+
+    -   This indicates the level of variability or agreement/disagreement between the SST products.
+
+    -   In this study, the different resolutions all showed similar spatial patterns and magnitudes = variability among SST products not strongly determined by spatial resolution.
+
+    -   Areas seen with common high variability - areas with known complex temperature structures. **Upwelling centers!**
+
+    </div>
+
+-   <div>
+
+    -   Seasonal bias of the variance was calculated by subtracting the mean monthly climatology over the austral winter months (June, July, August) from the mean monthly climatology over the austral summer months (December, January, February).
+
+    </div>
+
+-   <div>
+
+    -   An ANOVA was used to confirm that the data products yielded significantly different SST values at specific areas where there are complex temperature structures - **Upwelling centers!!**
+
+    </div>
+
+-   <div>
+
+    -   This study also found that the regions with the highest variance, hence the highest variability between SST products, closely corresponded with regions characterized by strong horizontal SST gradients
+
+    </div>
+
+-   <div>
+
+    -   The discrepancies were shown to correspond to regions where the number of missing IR retrievals was highest, including the Angola--Benguela Front, the nearshore environment of the southern African west coast and the retroflection region of the Agulhas Current
+
+    -   The missing data in these regions result in each product having a greater reliance on their respective interpolation schemes, thus leading to inherent differences among the L4 product.
+
+    -    A greater reliance on interpolation schemes has been shown to over smooth SST fields
+
+    </div>
+
+-   Discrepancies represented in L4 data products are most apparent in regions characterized by having a strong SST gradient within the coastal band (\~50 km). Therefore, the choice of data products is important when looking at coastal oceanographic phenomena (upwelling).
+
+### Research Papers on the Positions of Different Upwelling Centers Along the Benguela Upwelling System:
+
+#### The Benguela Current: An ecosystem of four components:
+
+-   <div>
+
+    -   BUS subdivided at 26°S at the Luderitz upwelling cell.
+
+    -   Angolan subsystem can be described as a transition zone between the wind-driven regions of the BUS and the Equatorial Atlantic - it has gentle, upwelling-favourable winds and well-defined seasons. Separated from the NBUS by Angola-Benguela Front.
+
+    -   The Luderitz-Orange River Cone: perennial upwelling cell with strong winds, high turbulence and strong offshore transport
+
+    -   SBUS - wind-driven seasonal upwelling at discrete centers with warm Agulhas water offshore
+
+    </div>
+
+#### **The land-sea breeze influences the oceanography of the southern Benguela upwelling system at multiple time-scales:**
+
+-   <div>
+
+    -   St Helena Bay has a deeper thermocline and therefore retains the upwelling front closer to land during active upwelling
+
+    </div>
+
+#### **Studies of the Ecology of the Benguela Current Upwelling System: The TRAFFIC Approach:**
+
+-   Austral summer: Warm oligotrophic water from Angola (South Atlantic Central Water) is transported southward - can dominate upwelled water masses in nbus.
+
+-   Likely the excessive turbulence and substantial offshore direction in the Luderitz cell (active year-round) - reason for phytoplankton minimum.
+
+-   Modeling studies have shown a poleward shift in subtropical high-pressure areas due to climate change
+
+    -   trade winds in sbus intensification
+
+    -   wind speeds and upwelling intensifies will weaken in nbus
+
+-   Upwelling centers:
+
+    <div>
+
+    -   Cape Frio - 19°S
+
+    -   Walvis Bay - 23°S
+
+    -   Luderitz - 25 - 26°S
+
+    -   Namaqua - 30°S
+
+    -   Cape Columbine - 32°S
+
+    -   Cape Town - 34°S
+
+    </div>
+
+#### A study of Benguela upwelling system using different upwelling indices derived from remotely sensed data:
+
+-   <div>
+
+    -   The Lüderitz upwelling cell and Orange River cone (LUCORC) area between 25°S and 30°S effectively splits the system into northern and southern regions
+
+    -   UI\^SST can be seen as an exact reflection of the upwelling intensity in three major upwelling areas, that is, off Lüderitz (23--27°S), Hondeklip (28--31.5°S) and Cape Columbine (31.5--33°S).
+
+    -   Two peaks of Chl-a and UISST situated at approximately 32°S and 33.5°S represent the upwelling cells of Cape Columbine and Cape Town, respectively. Compared with the low UIW in this area, these two peaks provide an evidence of orographic intensification induced upwelling by the capes. 
+
+    -    The reinforced upwelling intensity in UISST (28--34°S) by the cyclonic continental circulation or capes reflects the deficiency of UIW to capture the spatial variations of upwelling in a real ocean. Here, we estimate the effects of wind on the total upwelling intensity off Hondeklip and Cape Columbine. 
+
+    -   **In general, we suggest UISST as an upwelling index to scale the spatial variations of upwelling, and using UIW to study the temporal variations of upwelling.**
+
+    </div>
+
+### Research papers on comparisons of the different upwelling indices:
+
+#### A Comparison of the Three Upwelling Indices in the South Java Sea Shelf:
+
+Introduction:
+
+-   Wind-based (UIet) - water transported offshore by the wind stress from the coast - limitations: does not consider bathymetry of the shelf -\> cannot render the complexity of the spatial structure of upwellinng such as coastal upwelling cells.
+
+-   SST-based (UIsst) - gradient of thermal difference - response variable to upwelling
+
+-   Chlorophyll-a upwelling index - applying a threshold that distinguishes between high (upwelling) and low (no upwelling) concentrations of chl-a - 0.2 mg.m^-3^ threshold (Ismail et al., 2019).
+
+Methods:
+
+-   Data -
+
+-   <div>
+
+    -   Temporal scale: 2002 - 2017
+
+    -   Chl- a - L4, daily, 4 km ocean colour satellite data from MODIS
+
+    -   Wind - L4, daily, 25 km 10-m wind data from ERA5
+
+    -   SST - L4, daily, 8 km global ocean physics reanalysis from CMEMS
+
+    </div>
+
+-   Wind-index: calculate the Ekman transport coefficients - negative (positive) can be directly considered as the upwelling (downwelling) favourable UIet along the coast.
+
+-   SST-index: calculated as the SST difference between coastal and oceanic points at the same longitude - the SST anomaly threshold of -0.48ºC to define the upwelling or cold event (Atmadipoera et al., 2020).
+
+-   Chl-a-index: used the threshold of 0.2mg.m^-3^
+
+-   Unlike other studies this study was carried out more closely in the shelf area (40 - 200 m isobath)
+
+Conclusion:
+
+-   SST-based index was the best index at explaining upwelling, with a strong correlation to chl-a
+
+#### A Coastal Seawater Temperature Dataset for Biogeographical Studies: Large Biases between *In Situ* and Remotely-Sensed Data Sets around the Coast of South Africa
+
+Introduction:
+
+-   Despite the key role of temperature on species distribution, in many parts of the world there is a paucity of temperature profiles for the coastal zone
+
+-   The use of satellite-derived SST data have been validated against precise and accurate temperature measurements taken in-situ. This is seen particulary in offshore regions, where satellite data generally reflects reality (Donlon CJ, Minnett PJ, Gentemann C, Nightingale TJ, Barton IJ et al., 2002; Casey KS & Cornillon P, 1999)
+
+-   Currently no published seawater temperature climatologies exist for South Africa's coastal zone as a whole, and in fact, few exist globally. Gridded datasets from satellite imagery have provided an important understanding of offshore oceanographic processes in southern Africa
+
+-   the interaction of hydrodynamic and atmospheric forces create a complex system typified by large variability at smaller spatial scales than further offshore
+
+<div>
+
+1.  Coastal features are often smaller than most of the highest resolution satellite SST data can pick up
+2.  Atmospheric corrections at coast -\> induce strong biases at the monthly scale in regions with a strong horizontal SST gradient such as upwelling systems.
+3.  Hydrodynamic regimes - breaking of water column at coast in shallow waters - may not accurately relate directly to measurements taken tens of kilometers from coast.
+4.  Missing pixels at land/sea edge - land bleed - land and sea temperatures mixing
+
+</div>
+
+#### Low Confidence in multi-decadal trends of wind-driven upwelling across the Benguela Upwelling System due to internal climate variability:
+
+-   Alongshore wind stress is proportional to upwelling and associated with offshore directed transport - coastal upwelling - confined to narrow coastal zones (\~30 km).
+
+-   Farther offshore - Ekman transport shows a relatively weak divergence = upward (downward) velocity that is proportional to the local negative (positive) wind stress curl - Wind-stress curl driven upwelling - weaker than coastal upwelling but extends over a broader area
+
+-   Surface wind across the Namibian shelf is affected by northward atmospheric low-level jet (Benguela low-level coastal jet) - The signatures of this jet more prominent at 17°S and 25° - 30°S (Kunene and Luderitz upwelling cells).
+
+-   South Atlantic Anticyclone (SAA) and the Angola-Kalahari low presure system have a cross-shore sea level pressure gradient between them which is proportional to the surface wind that persists year-round in the NBUS.
+
+-   Total amount of upwelled water associated with coastal offshore transport in the NBUS is affected by the strength of SAA.
+
+-   Enhanced coastal offshore transport was observed in SBUS when SAA shifted south
+
+-   Lamont et al (2018) and Abrahams et al (2021) - significant downward trend in number of offshore directed Ekman transport events across NBUS - upward trend in SBUS
+
+-   Climate models project: acceleration of upwelling favorable winds over the poleward regions of EBUS's . Slight deceleration in equatorward regions.
+
+-   These trends are less prominent in the Benguela Upwelling System.
+
+-   These studies were inspired by Bakun's Hypothesis - However, this hypothesis does not consider the mechanism of wind stress curl driven upwelling .
+
+-   It is important to bear in mind the different fluctuations of coastal and wind stress curl driven upwelling.
+
+#### Oxygen and Nutrient Trapping in the Southern Benguela Upwelling System:
+
+-   Data from research cruise and a mooring - topographically steered nutrient trapping zone develops in a narrow belt along coast during upwelling in austral summer and spring
+
+-   Nutrient trapping operates at expense of decreasing oxygen concentrations - anoxic events at the end of the upwelling season
+
+-   It is seen that nutrient trapping efficiency seems to mitigate global change impacts on the SBUS - Regional impacts (topographically) explain varying responses of upwelling systems
+
+-   Wind-driven Ekman transport stronger magnitude in NBUS, but net primary production rates are similar between NBUS and SBUS.
+
+-   On-shelf trapping of regenerated nutrients increases effects of upwelling on productivity in the SBUS.
+
+-   Oxygen Minimum Zone (OMZ) in NBUS - inflow of oxygen-poor waters from Angola basin. The OMZ is locally produced by the balance between physical oxygen supply and biological oxygen consumption.
+
+-   The SBUS OMZ is most pronounced in bottom waters of St Helena Bay
+
+-   Upwelling-driven seasonality with low oxygen and expanded OMZ at end of upwelling season (Jan-April), and higher values between June and October when upwelling is weaker.
+
+-   No significant trends in productivity but there is a tendency toward an intensification of upwelling in the SBUS.
+
+#### An analysis of SST gradients off the Peruvian Coast: The impact of going to higher resolution:
+
+-   Only SST derived from infrared satellite sensors have sufficiently high resolution to determine scales associated with coastal upwelling
+
+-   <div>
+
+    -   However, limited by cloud coverage
+
+    -   Microwave sensors not limited by clouds but resolution of 25 km
+
+    -   Upwelling regions are associated with gradients in SST defined by frontal structures smaller than 25 km.
+
+    </div>
+
+-   High resolution regional models - better understand meso to submeso scale dynamics
+
+-   <div>
+
+    -   Influential to biogeochemistry and biological properties
+
+    -   Improved knowledge of air-sea interactions at mesoscales
+
+    </div>
+
+-   Aim: Use SST gradients as proxy of the frontal structures
+
+-   Objective: Quantify the annual cycle of gradient magnitudes, and examine the consistency between the magnitude of the gradients and the resolution - Determine whether gradients variability is due to mesoscale and submesoscale variability.
+
+-   Methods: Across shore gradient in SST
+
+-   Conclusion:
+
+-   <div>
+
+    -   Magnitude of seasonal cycle off Pisco (south) is significantly larger than the other L4 datasets.
+
+    -   High res data (MUR) provides more realistic representations of the location and magnitudes of the SST front off Peru
+
+    -   All 4 data sets are consistent in showing the large-scale structure of coastal upwelling region, indicating that there is significant onshore-offshore movement of the upwelling front at the seasonal time scale
+
+    -   SST products using both MODIS and AVHRR could potentially have better representation of SST gradients in coastal upwelling where cloud cover is a limiting factor.
+
+    -   MUR better identifies upwelling scale.
+
+    </div>

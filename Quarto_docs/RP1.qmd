@@ -1,0 +1,21 @@
+---
+title: "Research Chapter 1"
+format: html
+editor: visual
+---
+
+# Abstract:
+
+# Introduction:
+
+The Benguela Upwelling System (BUS) is one of the four major Eastern Boundary Upwelling Systems (EBUS) in the world, and is a very productive region of coastline. Upwelling in the BUS is driven by prevailing south-easterly (equatorward) winds, as well as mesoscale features and other atmospheric influences which facilitate the exertion of coastal surface waters away from the coastline, toward open ocean. The EBUS's have been the subject of many studies on the ocean and atmospheric dynamics involved in upwelling, with special focus being on how to quantify the measurables of this complex phenomenon responsible for sustaining coastal fishing industries through the use of vast remote sensing repositories. This has been trialed through the application of a number of different upwelling indices with the variables being the driving force of various wind variables as well as the vast record of sea surface temperature data being the response variable.
+
+There are two major emerging hypotheses on the future of upwelling events with increased anthropogenic influence on atmospheric processes. The first is Bakun's hypothesis that there will be a general increase in upwelling due to increased alongshore wind stress caused by strengthened temperature gradients between land and sea caused by the warming of landmasses due to human influence. The second and most recent hypothesis suggests that the poleward shift of atmospheric high-pressure systems will cause the premature start of upwelling seasons with delayed endings to these seasons in high, but not low, latitudes. It is also expected, that summertime winds at the higher latitudes will increase in intensity, whilst weakening at lower latitudes nearer to the equator.
+
+# Methods:
+
+# Results:
+
+# Discussion:
+
+# References:

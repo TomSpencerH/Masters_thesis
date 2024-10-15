@@ -1,0 +1,213 @@
+---
+title: "Thoughts_thesis"
+format: html
+editor: visual
+---
+
+## Introduction
+
+## Research Chapter 1:
+
+-   Choose SST data products that fall within the neccessary regions - Eastern Boundary Upwelling Systems (EBUS) . Preferably 2 high resolution datasets, and 2 lower resolution datasets. Choose SST products according to previous literature.\
+
+-   Find literature suggesting suitable datasets that are appropriate for the **area in question** and that have data that have been collected **over a decent amount of time** to do a long-term temporal analyses. Another important component to mention is the the comparison between the various **processing levels** involved in satellite data, as well as the different **interpolation schemes** used and which dataset is more complete in their way of gathering aforementioned data.
+
+<div>
+
++---------------+------------------------------------------+--------------------+-------+----------------+
+| Data Product: | Spatial Range                            | Temporal Range     | Level | Resolution (°) |
++===============+==========================================+====================+=======+================+
+| **MUR**       | -   **-90S - 90N, 180E - -180W**         | **2002 - present** | **4** | **0.01**       |
++---------------+------------------------------------------+--------------------+-------+----------------+
+| **OSPO**      | -   **-90S - 90N, 180E - -180W**         | **2014 - present** | **4** | **0.05**       |
++---------------+------------------------------------------+--------------------+-------+----------------+
+| ODYSSEA       | -   -79.95S - 79.95N, 179.95E - -179.95W | 2021 - present     | 4     | 0.1            |
++---------------+------------------------------------------+--------------------+-------+----------------+
+| REMSS         | -   -90S - 90N, 180E - -180W             | 2002 - present     | 4     | 0.09           |
++---------------+------------------------------------------+--------------------+-------+----------------+
+| **OSTIA**     | -   **-90S - 90N, 180E - -180W**         | **2007 - present** | **4** | **0.05**       |
++---------------+------------------------------------------+--------------------+-------+----------------+
+| **DMI_OI**    | -   **-90S - 90N, 180E - -180W**         | **2013 - present** | **4** | **0.05**       |
++---------------+------------------------------------------+--------------------+-------+----------------+
+
+: Potential L4 SST Data Products
+
+</div>
+
+1.  Choose a time-frame where all the data products overlap. Temporal range must be great enough to convey, with a high level of accuracy, spatial patterns. 5 years?
+
+2.  Jan 2017 - Dec 2021 = 5 year period
+
+3.  When choosing a dataset, the resolution must be high enough to match data points to the points constructed along the shore-normal transects. Therefore, an appropriate pre-determined resolution must be established beforehand. It seems that a 0.05 degree resolution is the appropriate size. I tried the REMSS 0.09 degree resolution, however, the data points only matched under 4 points along the transect and therefore left extremely incomplete data for analyses of SST gradient.
+
+    +----------+-----------------+------------------------------------------------------------------------------------------+-----------------------------------------------------+----------------------------+---------------------------------------------+
+    | Product: | Resolution (º): | Main Sensors:                                                                            | Source:                                             | Scheme:                    | Originating Centre:                         |
+    +==========+=================+==========================================================================================+=====================================================+============================+=============================================+
+    | MUR      | 0.01            | AMSR-E, AMSR-2, MODIS (Aqua and Terra), Windsat, AVHRR and in situ data from ships/buoys | NASA Earthdata - PODAAC;                            | Optimal Interpolation (OI) | JPL Physical Oceanography DAAC              |
+    |          |                 |                                                                                          |                                                     |                            |                                             |
+    |          |                 |                                                                                          | Nation Oceanic and AtmosphericAdministration (NOAA) |                            |                                             |
+    +----------+-----------------+------------------------------------------------------------------------------------------+-----------------------------------------------------+----------------------------+---------------------------------------------+
+    | OSPO     | 0.05            | AVHRR, VIIRS, GOES imager, JAMI and in situ data from ships/buoys                        | NASA Earthdata - PODAAC                             | Optimal Interpolation (OI) | Office of Satellite Products and Operations |
+    |          |                 |                                                                                          |                                                     |                            |                                             |
+    |          |                 |                                                                                          |                                                     |                            | (OSPO)                                      |
+    +----------+-----------------+------------------------------------------------------------------------------------------+-----------------------------------------------------+----------------------------+---------------------------------------------+
+    | OSTIA    | 0.05            | AVHRR, SEVIRI, GOES imager, IASI, TMI and in situ data from ships/buoys                  | NASA Earthdata -                                    | Optimal Interpolation (OI) | UK Met Office                               |
+    |          |                 |                                                                                          |                                                     |                            |                                             |
+    |          |                 |                                                                                          | PODAAC;                                             |                            |                                             |
+    |          |                 |                                                                                          |                                                     |                            |                                             |
+    |          |                 |                                                                                          | Copernicus Marine Data Store                        |                            |                                             |
+    +----------+-----------------+------------------------------------------------------------------------------------------+-----------------------------------------------------+----------------------------+---------------------------------------------+
+    | DMI_OI   | 0.05            | AVHRR, SEVIRI, AMSR2, VIIRS, MODIS                                                       | NASA Earthdata -                                    | Optimal Interpolation (OI) | Danish Metereological Institute (DMI)       |
+    |          |                 |                                                                                          |                                                     |                            |                                             |
+    |          |                 |                                                                                          | PODAAC                                              |                            |                                             |
+    +----------+-----------------+------------------------------------------------------------------------------------------+-----------------------------------------------------+----------------------------+---------------------------------------------+
+
+4.  Determine which product is best suited for your further analysis by comparing the datasets using a set criteria determined from previous papers...
+
+5.  In this investigation I will be using Sea Surface Temperature (SST) Gradient as the chosen criteria for my analyses of determining the most suitable dataset for furthering my research in the area of the Benguela Upwelling System (BUS).
+
+I deem that for reference it is best to use studies that have determined areas (coordinates) where upwelling has been most significant in the BUS, and use those points as reference against what the SST gradient patterns are suggesting for the different datasets.
+
+-   
+
+    ## 
+
+-   Include Francois Engelbrecht's modeled downscale wind data into the mix. Use the spatial patterns determined by the known SST products, to justify the new modeled wind data. Read papers on how to do this.
+
+## Introduction:
+
+Eastern Boundary Upwelling Systems.
+
+Previous studies have made use of various different kinds of upwelling indices to justify the decadal, inter-annual and seasonal patterns in coastal upwelling (references). The major variables of these indices being the driving variable of wind stress as well as, the response variable of sea surface temperature. The Bakun upwelling index has been widely used, despite outputs being somewhat convoluted on a regional scale using low resolution satellite data. The major SST upwelling index is SSTgradient which is an over simplified method of discerning the complex temperature structures related to coastal upwelling. The use of cross-shore transects and only two points on either end of each transect does not encompass the driving variables of coastal orientation, shelf width and bottom slope topography. I feel most indices do not take these variables into account, and therefore have incomplete views on the regional dynamics involved when looking at coastal upwelling. -\> It is important to use higher resolution data in order to rectify general 'corrections' made when using lower resolution data on a smaller study area -\> this study uses shore-normal transects extending from the coastline to the continental shelf boundary to account for the orientation of the coastline and shelf width. There are also multiple points plotted along the transects to obtain a more accurate SSTgradient using a linear regression for each transect.
+
+Mention the ability for the satellite data products to pick up inter-annual spatial variability between the SBUS and the NBUS.
+
+The importance of this study is to create a simple, but not over-simplified, SSTgradient upwelling index that takes into account various biogeographical features (bathymetry, shelf width, coastal embayments and the presence/absence of upwelling cells) using simple linear regression methods that shore-normal transects can achieve.
+
+Remotely sensed data are of growing importance when it comes to Earth observation, and in particular the field of oceanography due to the unfavourable conditions for in-situ measurements posed by the complex nature of the oceanic environment. Satellite data, therefore, has become a focal point in oceanographic studies to measure certain variables using various kinds of on-board sensors. Sea surface temperature (SST) is the main oceanic variable recorded by satellites, as it is a major response variable to differing oceanographic processes across the globe.
+
+There are however, challenges when it comes to data collection and processing with satellites. The largest challenge is the limitations of the spatial and temporal fields of satellite observation. The presence of satellite data at higher resolutions over long periods of time are severly lacking in many areas around the world, causing an obstacle of oceanic observation on smaller regional scales.
+
+Satellite sensors are limited in their capabilities to defer the many disturbances one can expect when considering the largely variable environment of the ocean. There are two types of sensors on-board satellites. There are passive microwave sensors, which are able to penetrate cloud cover and minimises the amplitude of other such potential interferences. However, these sensors allow only for low resolution imagery (25 - 50 km), and their accuracy has been seen to decrease near coastlines due to land contamination and radio frequency interference. Then there are thermal infrared sensors, which are strongly impacted by atmospheric interferences, such as cloud cover. However, these sensors allow for a much higher image resolution (\~ 1 km). Therefore, MW sensors have missing data along the coastal band, whilst IR sensors have missing data according to cloud cover and other aerosol interference.
+
+The incomplete data brought about by the two types of sensors, as well as the lack of satellite data collected at high resolutions at global scale over long time periods has led to the development of different merging and interpolation techniques to allow for more complete data. This data are known as Level 4 (L4) processed data, and is categorized as near real time, high resolution data. The most well documented of this type of data are the many different SST data products found in multiple online repositories that are accessible by the public.
+
+A common issue with the use of Level 4 data in many areas, is the over-reliance on interpolation schemes due to the lack of input of actual in-situ measurements in specific areas. This is a known problem for the Southern Hemisphere, as the
+
+**The major aim of this study:** To identify spatial patterns in coastal upwelling across different L4 satellite products along the Benguela Upwelling System. Using shore-normal transects\* to calculate SST gradients along the BUS, as well as with the use of chlorophyll and wind data, spatial patterns will emerge to show the various mesoscale and submesoscale influences affecting coastal upwelling in different regions of the BUS.
+
+\*The use of shore-normal transects as opposed to cross-shore transects will hopefully provide a more accurate representation of SST gradient, as well as provide insight into the influence of mesoscale and submesoscale frontal structures along the coast (embayments, eddies, bathymetry, shelf width etc.).
+
+### Methods:
+
+1.  Study Site -
+
+    -   The Benguela Upwelling System (BUS) - (14°E, -35°S, 20°E, -17°S).
+
+    -   This system is separated into the SBUS and NBUS, by the Luderitz upwelling cell and the Orange River cone (LUCORC) between 25°S and 30°S.
+
+    -   In the SBUS, there ares trong seasonal patterns of upwelling due to the strengethening and increased frequency of South-easterly (equatorward) winds during the Summer months.
+
+    -   The Luderitz upwelling cell is categorized by
+
+    -   The NBUS -
+
+    -   Characterized by a narrow continental shelf that goes to a depth of the 250m isobath. The distance from the coastline ranges from 14 to 200 km offshore.
+
+    -   There are six identified upwelling cells running along this system - (where the three strongest cells have been identified to be the Walvis Bay, Cape Columbine and Cape Town cells?)
+
+    -   Previous SST-gradient based upwelling indices have used the SST difference between a coastal and offshore point at a given latitude and time - cross-shore SST gradient (Aissa, B., et al., 2014).
+
+    -   Regridding. This study has made use of shore-normal transects from the coastR package to match a series of SST data points along these transects, allowing for a linear regression to obtain a more accurate SST gradient along the coastline. These transects also extend from the coastline to the boundary of the continental shelf, taking into account shelf width along the coastline.
+
+    -   In this study - monthly climatologies over the 5 year period were calculated from each SST dataset in order to identify the seasonality and inter-annual variability along the BUS, as well as identifying where upwelling seemed most intense.
+
+## Results:
+
+### Seasonal Spatial Analysis:
+
+### Sea Surface Temperature Gradient -
+
+![Figure: SST Gradient - Summer](images/4_sum-01.png)
+
+1.  For all SST products it is seen that at -27° \> latitude \> -29° , there is a clear band of a stronger positive SST gradient.
+
+2.  DMI SST product shows abnormally high positive SST gradients all along the BUS coastline, except for the Cape Town upwelling area (Dark blue). Most likely due to the lack of in situ measurements.
+
+3.  The common areas of stronger negative SST gradient (SST decreases moving from offshore to coast) across all SST products are: Walvis Bay (latitude = -23°), Luderitz (latitude = -25°), Cape Columbine (latitude = -32.5°; -32°) and Cape Town (latitude = -34°).
+
+4.  MUR and DMI SST products show stronger positive SST gradients south of Cape Columbine (latitude \< -32.5°).
+
+![SST Gradient - Winter](images/4_wint.png)
+
+1.  Consistent weak SST gradient (0 - 0.2) in the NBUS above the Luderitz upwelling cell (latitude \>= -26°).
+
+2.  Still a strong positive SST gradient (0.03 - 0.08) along the band situated at, -27° \> latitude \> -29°.
+
+3.  Consistent divide of stronger positive SST gradients by Cape Columbine across SST products.
+
+### Chlorophyll -
+
+![Seasonal Chloropyll](images/Seasonal.png)
+
+1.  Overall glance: there appears to be cumulatively more chlorophyll in the Summer months.
+
+2.  There is not a large seasonality in chlorophyll concentration along majority of the coast. However, the most noticeable differences between the seasons are spatially, south of Cape Columbine near the Cape Peninsula where the concentration is significantly larger in Summer months.
+
+3.  A pattern I am also picking up on is in the Winter months, the areas with the highest chlorophyll concentrations appear to be in embayment areas. This could potentially be due to the retention of chlorophyll due to the shape of the coast. Whereas, in Summer months, there seems to be fairly consistent high chlorophyll concentrations spanning along the entire coast.
+
+4.  It is also seen that there is a gap in higher chlorophyll concentrations between the SBUS and NBUS due to the Luderitz upwelling system and the LUCORC region. This gap is shortened in Summer months and then at its largest in Winter months.
+
+5.  The Cape Columbine area appears to have the most consistently high chlorophyll concentration. Embayment Area.
+
+### Wind -
+
+![Daytime Seasonal Wind Stress Curl](images/Seasonal_14h00.png)
+
+1.  Summer months :Two regions of high wind stress curl in the NBUS - LUCORC (-26; -28) and Northern NBUS (-18;-22.5). Both these regions have a positive wind stress curl gradient extending inland.
+
+2.  Summer months: Very low wind stress curl inland in the SBUS with a few cells of higher relative wind stress curl. There are a few regions of light green in the areas around the Cape Peninsula.
+
+3.  Winter months: Consistent negative wind stress curl gradient moving from offshore to inland. SBUS has a more stable wind stress curl gradient.
+
+4.  Winter months: The whole coastline in the NBUS has a high wind stress curl offshore compared to inland.
+
+### Inter-annual Spatial Analysis:
+
+### Sea Surface Temperature Gradient -
+
+Southern Benguela Upwelling System:
+
+OSTIA: Major change is the appearance of stronger negative SST gradients in the Cape Town region (False Bay, Cape peninsula) during the Summer months - most intense during January. That coupled with the intensification of stronger positive SST gradient in the Orange river region (North SBUS). Most areas have zero to slightly positive SST Gradient. It is also seen that St Helena Bay displays a negative SST Gradient in the Summer months (The point just south of Cape Columbine).
+
+OSPO: Major change is the appearance of stronger negative SST gradients in the Cape Town region (False Bay, Cape Peninsula) during the Summer months - most intense during January. That is coupled with the intensification of stronger positive SST Gradient in the Orange river region (North SBUS). There is a drastic change from strong positive to negative SST gradient just south of St Helena Bay. More specific regional differences in SST gradient.
+
+DMI: This product also shows the intensification of negative SST gradient around Cape Town during Summer months. However, the SST gradient in these areas maintains consistent lower SST gradients than the surrounds throughout the year. Irregularly high SST gradient throughout the year, with some areas showing slight inter-annual variability. This product does not show accurately regional spatial patterns.
+
+MUR: Shows a decrease in the intensity of positive SST gradient in the Orange river region during the Summer months. Shows increase in negative SST gradient in the Cape Columbine region during Summer months. More general decrease in SST gradient south of Cape Columbine during Summer months.
+
+Conclusion:
+
+Northern Benguela Upwelling System:
+
+OSTIA: Increase in SST gradient in Cape Frio region during Summer months. Intensification of negative SST gradient in Walvis Bay during Summer months. Decrease in SST gradient in Luderitz during Summer months.
+
+OSPO: Increase in SST gradient in the north of Walvis Bay region during Summer months. Decrease in SST gradient in the Walvis Bay to Luderitz region during Summer.
+
+DMI: Increase in SST gradient in the north of Walvis Bay region during Summer months. Decrease in SST gradient in the Walvis Bay to Luderitz region during Summer. Very small range of SST gradient with this product. But general similar patterns to the other two products.
+
+MUR: Same patterns as the other products.
+
+Conclusion: All SST products show adequately the general patterns of inter-annual variability when it comes to the Northern Benguela. Therefore, Southern Benguela gives better indication of the better performing SST product for identifying spatial patterns. The range of slope is also a lot less than the sbus, indicating that there is less inter-annual variability in the nbus.
+
+## Research Chapter 2:
+
+-   Using the justified datasets from research chapter 1, determine the changes in upwelling intensity using the set criteria used in research chapter 1 (various upwelling indices, SSTgradient etc.).
+
+-   Other criteria on how to quantify upwelling intensity can also be constructed using various parameters determined by you - drop in SST below specific percentile, bottom slope, shelf width, wind stress curl etc.
+
+-   The regions being studied will be the upwelling centers determined from research chapter 1. This will parameterise the data to a manageable level.
+
+-   High resolution wind data would help determine long-term spatial patterns with wind stress curl, and how these spatial patterns overlap with the spatial patterns of SST.
+
+-   Using a longer temporal range, long-term pattrns in upwelling intensity can be observed. Therefore, more accurate depictions of how upwelling intensity has changed over time can be made.
