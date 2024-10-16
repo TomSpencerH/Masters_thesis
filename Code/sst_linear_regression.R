@@ -139,6 +139,14 @@ sst_bath <- points_in_buff(new_sst, bath, bind)
 
 rm(models, sst_bath, new_sst, SA_bath)
 gc()
+
+coastline <- ne_countries(scale = "medium", returnclass = "sf", continent = "Africa")
+
+# Define the bounding box for the Southern African west coast
+bounding_box <- st_bbox(c(xmin = 10, xmax = 20.5, ymin = -35, ymax = -15), crs = st_crs(4326))
+
+# Crop the coastline to the bounding box
+sa_coastline <- st_crop(coastline, bounding_box)
   
   library(colorspace)
   p1 <- ggplot(slope_data, aes(x = lon, y = lat)) +
@@ -153,8 +161,7 @@ gc()
                                     guide = guide_legend(title = "Decadal rate of change",
                                                          even.steps = FALSE,
                                                          show.limits = TRUE)) +
-    borders("world", regions = c("South Africa", "Namibia"), fill = "grey") +
-    coord_fixed(xlim = c(11, 21), ylim = c(-35, -17)) +
+    geom_sf(data = sa_coastline, fill = "grey80", color = "black") +
     #scale_fill_viridis(option = "turbo") +
     ggtitle("Sea Surface Temperature (DJF: 2002 - 2024)") +
     xlab("Longitude") +

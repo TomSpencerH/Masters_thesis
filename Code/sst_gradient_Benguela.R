@@ -16,7 +16,7 @@ library(RColorBrewer)
 
 
 
-bind <- readRDS("Processed_data/SST/Standard/OSTIA_full.Rds")
+bind <- readRDS("Processed_data/SST/Standard/MUR_full.Rds")
 
 
 
@@ -53,7 +53,7 @@ transects_func <- function(df){
   
   
   
-  SA_bath <- transects(SA_west_coast, spread = 60)
+  SA_bath <- transects(SA_west_coast, spread = 40)
   
   
   
@@ -162,6 +162,7 @@ connect <- era %>%
   left_join(y, by = c("lon", "lat")) %>% 
   na.omit()
 
+
 y2 <- connect %>% 
   left_join(y, by = c("group")) %>% 
   select(lon.y, lat.y, group, dist.y, dist.x) %>% 
@@ -176,13 +177,11 @@ n2 <- y2 %>%
   filter(dist == 0:max.dist)
 
 
+
 n3 <- n2 %>% 
   left_join(bind, by = c("lon", "lat")) %>%
   na.omit()
 
-n3 <- n3 %>% 
-  group_by(group) %>% 
-  filter(n()>2)
 
 models <- n3 %>% 
   group_by(group, month) %>% 
@@ -199,7 +198,10 @@ slope_df <- n3 %>%
 
 slope <- slope_df %>% 
   group_by(group) %>% 
-  filter(min(dist) <= 9) 
+  mutate(p75 = max.dist*0.75) %>% 
+  filter(min(dist) <= 9|
+           max(dist) > p75) 
+
 
 
 
@@ -221,28 +223,48 @@ sbus <- slope %>%
 rm(bind, connect, n3, df, df1, df2, dfs, era, models, new_bathy, our_nc_data, SB_bath, site_list, slope_df, y, y2, i, SA_bath)
 gc()
 
+coastline <- ne_countries(scale = "medium", returnclass = "sf", continent = "Africa")
+
+# Define the bounding box for the Southern African west coast
+bounding_box <- st_bbox(c(xmin = 10, xmax = 20.5, ymin = -35, ymax = -15), crs = st_crs(4326))
+
+sf_use_s2(FALSE)
+
+# Crop the coastline to the bounding box
+sa_coastline <- st_crop(coastline, bounding_box)
+
 library(viridis)
 library(colorspace)
 
-ggplot(slope %>% 
-         filter(month == "Dec"|
-                  month == "Jan"|
-                  month == "Feb"), aes(x = lon, y = lat)) +
-  geom_contour(data = bath, aes(z = bathy), colour = "black", alpha = 0.6) +
-  geom_point(aes(col = slope)) +
-  geom_line(aes(group = group, col = slope), linewidth = 1) +
-  borders("world", regions = c("South Africa", "Namibia"), fill = "grey") +
-  #coord_quickmap(expand = F) +
-  coord_fixed(xlim = c(11, 20), ylim = c(-35, -17)) +
-  scale_color_viridis(option = "turbo") +
+sum_slope <- slope %>% 
+  filter(month == "Dec"|
+           month == "Jan"|
+           month == "Feb")
+
+range(sum_slope$slope)
+
+p40 <- ggplot() +
+  geom_contour(data = bath, aes(x = lon, y = lat, z = bathy), colour = "black", alpha = 0.6) +
+  geom_point(data = sum_slope, aes(x = lon, y = lat, col = slope)) +
+  geom_line(data = sum_slope, aes(x = lon, y = lat, group = group, col = slope), linewidth = 1) +
+  geom_sf(data = sa_coastline, fill = "grey80", color = "black") +
+  coord_sf(xlim = c(17, 20), ylim = c(-35, -32)) +
+  scale_color_continuous_diverging(palette = "Blue-Red 3", l1 = 20, l2 = 90, p1 = 0.7, p2 = 1,
+                                  rev = FALSE,
+                                  limits = c(-0.15, 0.15),
+                                  # guide = "colourbar",
+                                  guide = guide_legend(even.steps = FALSE,
+                                                       show.limits = TRUE)) +
   #geom_text(data = area, aes(x = lon, y = lat, label = Area)) +
   #facet_wrap(~month) +
   xlab("Longitude") +
   ylab("Latitude") +
   labs(color='SST Gradient') +
-  ggtitle("OSTIA")
+  ggtitle("OSPO")
 
+p50
 
+ggarrange(p40, p45, p50, p60, ncol = 4, common.legend = TRUE)
 
 ost_sbus <- ggplot(sbus, aes(x = lon, y = lat)) +
   geom_contour(data = bath, aes(z = bathy), colour = "black", alpha = 0.6) +
