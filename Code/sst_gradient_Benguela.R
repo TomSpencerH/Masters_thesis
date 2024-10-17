@@ -12,11 +12,14 @@ library(zoo)
 library(lattice)
 library(latticeExtra)
 library(RColorBrewer)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(sf)
 
 
 
 
-bind <- readRDS("Processed_data/SST/Standard/MUR_full.Rds")
+bind <- readRDS("Processed_data/SST/Standard/OSPO_full.Rds")
 
 
 
@@ -53,7 +56,7 @@ transects_func <- function(df){
   
   
   
-  SA_bath <- transects(SA_west_coast, spread = 40)
+  SA_bath <- transects(SA_west_coast, spread = 60)
   
   
   
@@ -115,92 +118,109 @@ for(i in 1:nrow(site_list)){
 bind$lon <- round(bind$lon, 2)
 bind$lat <- round(bind$lat, 2)
 
+bathy <- function(res){
+  
+  SA_bath <- getNOAA.bathy(lon1 = 11, lon2 = 20,
+                           lat1 = -35, lat2 = -17, resolution = res)
+  
+  
+  SB_bath <- fortify.bathy(SA_bath)
+  
+  SB_bath <- SB_bath %>%
+    rename(lon = x,
+           lat = y,
+           bathy = z) %>% 
+    filter(bathy <= 0) 
+  
+  
+  
+  SB_bath$lon <- round(SB_bath$lon, 2)
+  SB_bath$lat <- round(SB_bath$lat, 2)
+  
+  bath <- SB_bath %>%
+    filter(bathy >= -250) %>% 
+    group_by(lat, lon) %>% 
+    summarise(bathy = mean(bathy))
+  
+  return(bath)
+  
+}
+
+bath <- bathy(res = 0.6)
 
 
-SA_bath <- getNOAA.bathy(lon1 = 11, lon2 = 20,
-                         lat1 = -35, lat2 = -17, resolution = 0.6)
+final_transect <- function(df1, df2, df3) {
+  
+  
+  new_bathy <- df3 %>% 
+    group_by(lat) %>% 
+    mutate(min_lon = min(lon))
+  
+  
+  
+  d1 <- data.frame(lon = df1$lon,
+                    lat = df1$lat)
+  
+  d2 <- data.frame(lon = new_bathy$min_lon,
+                    lat = new_bathy$lat)
+  
+  
+  
+  era <- dplyr::intersect(d1, d2)
+  
+  
+  
+  
+  connect <- era %>% 
+    left_join(y, by = c("lon", "lat")) %>% 
+    na.omit()
+  
+  
+  y2 <- connect %>% 
+    left_join(df1, by = c("group")) %>% 
+    select(lon.y, lat.y, group, dist.y, dist.x) %>% 
+    rename(lon = lon.y,
+           lat = lat.y,
+           dist = dist.y,
+           max.dist = dist.x)
+  
+  
+  n2 <- y2 %>% 
+    group_by(group) %>% 
+    filter(dist == 0:max.dist)
+  
+  
+  
+  n3 <- n2 %>% 
+    left_join(df2, by = c("lon", "lat")) %>%
+    na.omit()
+  
+  
+  models <- n3 %>% 
+    group_by(group, month) %>% 
+    group_modify(~ broom::tidy(lm(temp ~ dist, data = .x))) %>%
+    na.omit() %>% 
+    filter(term == "dist") %>% 
+    select(group, month, estimate) %>% 
+    rename(slope = estimate)
+  
+  
+  slope_df <- n3 %>% 
+    left_join(models, by = c("group", "month")) %>% 
+    na.omit()
+  
+  slope <- slope_df %>% 
+    group_by(group) %>% 
+    mutate(p75 = max.dist*0.75) %>% 
+    filter(min(dist) <= 9|
+             max(dist) > p75) 
+  
+  return(slope)
+  
+  }
 
 
-SB_bath <- fortify.bathy(SA_bath)
-
-SB_bath <- SB_bath %>%
-  rename(lon = x,
-         lat = y,
-         bathy = z) %>% 
-  filter(bathy <= 0) 
-
-
-
-SB_bath$lon <- round(SB_bath$lon, 2)
-SB_bath$lat <- round(SB_bath$lat, 2)
-
-bath <- SB_bath %>%
-  filter(bathy >= -250) %>% 
-  group_by(lat, lon) %>% 
-  summarise(bathy = mean(bathy))
-
-new_bathy <- bath %>% 
-  group_by(lat) %>% 
-  mutate(min_lon = min(lon))
-
-
-
-df1 <- data.frame(lon = y$lon,
-                  lat = y$lat)
-
-df2 <- data.frame(lon = new_bathy$min_lon,
-                  lat = new_bathy$lat)
-
-
-
-era <- dplyr::intersect(df1, df2)
-
-
-
-
-connect <- era %>% 
-  left_join(y, by = c("lon", "lat")) %>% 
-  na.omit()
-
-
-y2 <- connect %>% 
-  left_join(y, by = c("group")) %>% 
-  select(lon.y, lat.y, group, dist.y, dist.x) %>% 
-  rename(lon = lon.y,
-         lat = lat.y,
-         dist = dist.y,
-         max.dist = dist.x)
-
-
-n2 <- y2 %>% 
-  group_by(group) %>% 
-  filter(dist == 0:max.dist)
-
-
-
-n3 <- n2 %>% 
-  left_join(bind, by = c("lon", "lat")) %>%
-  na.omit()
-
-
-models <- n3 %>% 
-  group_by(group, month) %>% 
-  group_modify(~ broom::tidy(lm(temp ~ dist, data = .x))) %>%
-  na.omit() %>% 
-  filter(term == "dist") %>% 
-  select(group, month, estimate) %>% 
-  rename(slope = estimate)
-
-
-slope_df <- n3 %>% 
-  left_join(models, by = c("group", "month")) %>% 
-  na.omit()
-
-slope <- slope_df %>% 
-  group_by(group) %>% 
-  mutate(p75 = max.dist*0.75) %>% 
-  filter(min(dist) <= 9|
-           max(dist) > p75) 
+slope <- final_transect(df1 = y, df2 = bind, df3 = bath)
 
 
 
@@ -220,8 +240,6 @@ sbus <- slope %>%
   #group_by(group) %>% 
   #slice_sample(n = 50)
 
-rm(bind, connect, n3, df, df1, df2, dfs, era, models, new_bathy, our_nc_data, SB_bath, site_list, slope_df, y, y2, i, SA_bath)
-gc()
 
 coastline <- ne_countries(scale = "medium", returnclass = "sf", continent = "Africa")
 
@@ -241,14 +259,20 @@ sum_slope <- slope %>%
            month == "Jan"|
            month == "Feb")
 
+wint_slope <- slope %>% 
+  filter(month == "Jun"|
+           month == "Jul"|
+           month == "Aug")
+  
+
 range(sum_slope$slope)
 
-p40 <- ggplot() +
+wint_osp <- ggplot() +
   geom_contour(data = bath, aes(x = lon, y = lat, z = bathy), colour = "black", alpha = 0.6) +
-  geom_point(data = sum_slope, aes(x = lon, y = lat, col = slope)) +
-  geom_line(data = sum_slope, aes(x = lon, y = lat, group = group, col = slope), linewidth = 1) +
+  geom_point(data = wint_slope, aes(x = lon, y = lat, col = slope)) +
+  geom_line(data = wint_slope, aes(x = lon, y = lat, group = group, col = slope), linewidth = 1) +
   geom_sf(data = sa_coastline, fill = "grey80", color = "black") +
-  coord_sf(xlim = c(17, 20), ylim = c(-35, -32)) +
+  #coord_sf(xlim = c(17, 20), ylim = c(-35, -32)) +
   scale_color_continuous_diverging(palette = "Blue-Red 3", l1 = 20, l2 = 90, p1 = 0.7, p2 = 1,
                                   rev = FALSE,
                                   limits = c(-0.15, 0.15),
@@ -262,9 +286,21 @@ p40 <- ggplot() +
   labs(color='SST Gradient') +
   ggtitle("OSPO")
 
-p50
 
-ggarrange(p40, p45, p50, p60, ncol = 4, common.legend = TRUE)
+
+p1 <- ggarrange(sum_dmi, sum_osp, sum_ost, sum_mur, ncol = 4, common.legend = TRUE)
+
+p1 <- annotate_figure(p1, top = text_grob("Summer (DJF: 2017 - 2021)", 
+                                                 color = "red", face = "bold", size = 14))
+
+p2 <- ggarrange(wint_dmi, wint_osp, wint_ost, wint_mur, ncol = 4, common.legend = TRUE)
+
+p2 <- annotate_figure(p2, top = text_grob("Winter (JJA: 2017 - 2021)", 
+                                            color = "red", face = "bold", size = 14))
+
+p2
+
+
 
 ost_sbus <- ggplot(sbus, aes(x = lon, y = lat)) +
   geom_contour(data = bath, aes(z = bathy), colour = "black", alpha = 0.6) +

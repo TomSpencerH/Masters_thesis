@@ -108,7 +108,7 @@ transects_func <- function(df){
   
   
   
-  SA_bath <- transects(SA_west_coast, spread = 50)
+  SA_bath <- transects(SA_west_coast, spread = 65)
   
   
   
@@ -169,65 +169,88 @@ for(i in 1:nrow(site_list)){
 
 
 
-SA_bath <- getNOAA.bathy(lon1 = 11, lon2 = 20,
-                         lat1 = -35, lat2 = -17, resolution = 0.6)
+bathy <- function(res){
+  
+  SA_bath <- getNOAA.bathy(lon1 = 11, lon2 = 20,
+                           lat1 = -35, lat2 = -17, resolution = res)
+  
+  
+  SB_bath <- fortify.bathy(SA_bath)
+  
+  SB_bath <- SB_bath %>%
+    rename(lon = x,
+           lat = y,
+           bathy = z) %>% 
+    filter(bathy <= 0) 
+  
+  
+  
+  SB_bath$lon <- round(SB_bath$lon, 2)
+  SB_bath$lat <- round(SB_bath$lat, 2)
+  
+  bath <- SB_bath %>%
+    filter(bathy >= -250) %>% 
+    group_by(lat, lon) %>% 
+    summarise(bathy = mean(bathy))
+  
+  return(bath)
+  
+}
+
+bath <- bathy(res = 0.6)
+
+final_transect <- function(df1, df2){
+  
+  new_bathy <- df1 %>% 
+    group_by(lat) %>% 
+    mutate(min_lon = min(lon))
+  
+  
+  
+  d1 <- data.frame(lon = df2$lon,
+                    lat = df2$lat)
+  
+  d2 <- data.frame(lon = new_bathy$min_lon,
+                    lat = new_bathy$lat)
+  
+  
+  
+  era <- dplyr::intersect(d1, d2)
+  
+  
+  
+  
+  connect <- era %>% 
+    left_join(df2, by = c("lon", "lat")) %>% 
+    na.omit()
+  
+  
+  y2 <- connect %>% 
+    left_join(df2, by = c("group")) %>% 
+    select(lon.y, lat.y, group, dist.y, dist.x) %>% 
+    rename(lon = lon.y,
+           lat = lat.y,
+           dist = dist.y,
+           max.dist = dist.x)
+  
+  return(y2)
+  
+  
+}
+
+transects <- final_transect(df1 = bath, df2 = y)
+  
+  transects <- transects %>% 
+    group_by(group) %>% 
+    filter(dist == 0:max.dist) %>% 
+    filter(row_number() %% 2 != 0) %>% 
+    slice_sample(n = 6) %>% 
+    filter(min(dist) <= 9)
+  
 
 
-SB_bath <- fortify.bathy(SA_bath)
-
-SB_bath <- SB_bath %>%
-  rename(lon = x,
-         lat = y,
-         bathy = z) %>% 
-  filter(bathy <= 0) 
 
 
-
-SB_bath$lon <- round(SB_bath$lon, 2)
-SB_bath$lat <- round(SB_bath$lat, 2)
-
-bath <- SB_bath %>%
-  filter(bathy >= -250) %>% 
-  group_by(lat, lon) %>% 
-  summarise(bathy = mean(bathy))
-
-new_bathy <- bath %>% 
-  group_by(lat) %>% 
-  mutate(min_lon = min(lon))
-
-
-
-df1 <- data.frame(lon = y$lon,
-                  lat = y$lat)
-
-df2 <- data.frame(lon = new_bathy$min_lon,
-                  lat = new_bathy$lat)
-
-
-
-era <- dplyr::intersect(df1, df2)
-
-
-
-
-connect <- era %>% 
-  left_join(y, by = c("lon", "lat")) %>% 
-  na.omit()
-
-
-y2 <- connect %>% 
-  left_join(y, by = c("group")) %>% 
-  select(lon.y, lat.y, group, dist.y, dist.x) %>% 
-  rename(lon = lon.y,
-         lat = lat.y,
-         dist = dist.y,
-         max.dist = dist.x)
-
-n2 <- y2 %>% 
-  group_by(group) %>% 
-  filter(dist == 0:max.dist) %>% 
-  filter(row_number() %% 2 != 0) %>% 
-  slice_sample(n = 10)
 
 
 coastline <- ne_countries(scale = "medium", returnclass = "sf", continent = "Africa")
@@ -241,9 +264,33 @@ sf_use_s2(FALSE)
 sa_coastline <- st_crop(coastline, bounding_box)
 
 
-ggplot() +
-  geom_contour(data = bath, aes(x = lon, y = lat, z = bathy)) +
-  geom_point(data = n2, aes(x = lon, y = lat)) +
-  geom_line(data = n2, aes(x = lon, y = lat, group = group)) +
+p1 <- ggplot() +
+  geom_contour(data = bath, aes(x = lon, y = lat, z = bathy), col = "cyan4") +
+  geom_line(data = transects, aes(x = lon, y = lat, group = group)) +
+  geom_point(data = transects, aes(x = lon, y = lat), col = "red3") +
   geom_sf(data = sa_coastline, fill = "grey80", color = "black") +
-  coord_sf(xlim = c(17, 20), ylim = c(-35, -32)) 
+  coord_sf(xlim = c(12, 20), ylim = c(-35, -27)) +
+  xlab("Longitude") +
+  ylab("Latitude") +
+  ggtitle("Shore-normal")
+
+lon <- c(17.17, 12.5, 17.65, 12.8, 18.25, 13.5, 17.85, 12.9)
+lat <- c(-30, -30.6, -31, -31.5, -32, -32, -33, -33.1)
+point <- c("A", "A", "B", "B", "C", "C", "D", "D")  
+
+cross <- data.frame(lon, lat, point)
+
+p2 <- ggplot() +
+  geom_contour(data = bath, aes(x = lon, y = lat, z = bathy), col = "cyan4") +
+  geom_sf(data = sa_coastline, fill = "grey80", color = "black") +
+  coord_sf(xlim = c(12, 20), ylim = c(-35, -27)) +
+  geom_line(data = cross, aes(x = lon, y = lat, group = point)) +
+  geom_point(data = cross, aes(x = lon, y = lat), size = 4, col = "red3") +
+  xlab("Longitude") +
+  ylab("Latitude") +
+  ggtitle("Cross-shore")
+
+ggarrange(p1, p2, ncol = 2, align = "h")
+
+
+
