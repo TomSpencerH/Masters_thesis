@@ -100,129 +100,165 @@ setwd("C:/Users/tomsp/Desktop/Masters/Practice_thesis/Masters/")
 
 chl <- readRDS("Processed_data/Chl-a/chl_climatology.Rds")
 
-new_bind <- chl %>% 
-  group_by(lon, lat) %>% 
-  summarise()
+
+bathy <- function(res){
+  
+  SA_bath <- getNOAA.bathy(lon1 = 11, lon2 = 20,
+                           lat1 = -35, lat2 = -17, resolution = res)
+  
+  
+  SB_bath <- fortify.bathy(SA_bath)
+  
+  SB_bath <- SB_bath %>%
+    rename(lon = x,
+           lat = y,
+           bathy = z) %>% 
+    filter(bathy <= 0) 
+  
+  
+  
+  SB_bath$lon <- round(SB_bath$lon, 2)
+  SB_bath$lat <- round(SB_bath$lat, 2)
+  
+  bath <- SB_bath %>%
+    filter(bathy >= -250) %>% 
+    group_by(lat, lon) %>% 
+    summarise(bathy = mean(bathy))
+  
+  return(bath)
+  
+}
+
+bath <- bathy(res = 0.6)
 
 
-SA_bath <- getNOAA.bathy(lon1 = 11, lon2 = 20,
-                         lat1 = -35, lat2 = -17, resolution = 0.6)
+chl$lon <- round(chl$lon, 2)
+chl$lat <- round(chl$lat, 2)
 
 
-SB_bath <- fortify.bathy(SA_bath)
+final_transect <- function(df1, df2, df3) {
+  
+  
+  new_bathy <- df3 %>% 
+    group_by(lat) %>% 
+    mutate(min_lon = min(lon))
+  
+  
+  
+  d1 <- data.frame(lon = df1$lon,
+                   lat = df1$lat)
+  
+  d2 <- data.frame(lon = new_bathy$min_lon,
+                   lat = new_bathy$lat)
+  
+  
+  
+  era <- dplyr::intersect(d1, d2)
+  
+  
+  
+  
+  connect <- era %>% 
+    left_join(y, by = c("lon", "lat")) %>% 
+    na.omit()
+  
+  
+  y2 <- connect %>% 
+    left_join(df1, by = c("group")) %>% 
+    select(lon.y, lat.y, group, dist.y, dist.x) %>% 
+    rename(lon = lon.y,
+           lat = lat.y,
+           dist = dist.y,
+           max.dist = dist.x)
+  
+  
+  n2 <- y2 %>% 
+    group_by(group) %>% 
+    filter(dist == 0:max.dist)
+  
+  
+  
+  n3 <- n2 %>% 
+    left_join(df2, by = c("lon", "lat")) %>%
+    na.omit()
+  
+  
+  models <- n3 %>% 
+    group_by(group, month) %>% 
+    group_modify(~ broom::tidy(lm(chl ~ dist, data = .x))) %>%
+    na.omit() %>%  
+    filter(term == "dist") %>% 
+    select(group, month, estimate, p.value) %>% 
+    rename(slope = estimate)
+ 
+  
+  slope_df <- n3 %>% 
+    left_join(models, by = c("group", "month")) %>% 
+    na.omit()
+  
+  slope <- slope_df %>% 
+    group_by(group) %>% 
+    mutate(p75 = max.dist*0.75) %>% 
+    filter(min(dist) <= 9|
+             max(dist) > p75) 
+  
+  return(slope)
+  
+}
 
-SB_bath <- SB_bath %>%
-  rename(lon = x,
-         lat = y,
-         bathy = z) %>% 
-  filter(bathy <= 0) 
+
+slope <- final_transect(df1 = y, df2 = chl, df3 = bath)
 
 
-bath <- SB_bath %>%
-  filter(bathy >= -250) %>% 
-  group_by(lat, lon) %>% 
-  summarise(bathy = mean(bathy))
-
-library(FNN)
-
-
-bathy <- bath
-
-coordinates(new_bind) <- ~lon+lat
-
-coordinates(bath) <- ~lon+lat
-
-nn1 = get.knnx(coordinates(bath), coordinates(new_bind), 1)
-
-
-il = nn1$nn.dist[,1]
-
-new_bind$dist <- il
-
-new_data <- as.data.frame(new_bind)
-
-update <- new_data %>% 
-  filter(dist <= 0.04)
-
-
-
-new_update <- update %>% 
-  left_join(chl, by = c("lon", "lat")) %>% 
-  na.omit()
-
-new_update$month = factor(new_update$month, levels=c('Jan','Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug',
+slope$month = factor(slope$month, levels=c('Jan','Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug',
                                          'Sep', 'Oct', 'Nov', 'Dec'))
 
-ggplot(new_update, aes(x = lon, y = lat)) +
-  geom_tile(aes(fill = chl)) +
-  borders("world", regions = c("South Africa", "Namibia"), fill = "grey") +
-  #coord_fixed(xlim = c(11, 20), ylim = c(-35, -17)) +
-  coord_fixed(xlim = c(14, 20), ylim = c(-35, -27)) +
-  scale_fill_viridis(option = "turbo") +
-  facet_wrap(~month) +
-  ggtitle("Summer") +
-  xlab("Longitude") +
-  ylab("Latitude") +
-  labs(fill='Chlorophyll') 
+coastline <- ne_countries(scale = "medium", returnclass = "sf", continent = "Africa")
 
-# Seasonal (Summer vs Winter)
+# Define the bounding box for the Southern African west coast
+bounding_box <- st_bbox(c(xmin = 10, xmax = 20.5, ymin = -35, ymax = -15), crs = st_crs(4326))
 
-sum_chl <- new_update %>% 
-  filter(month == "Dec"|
-           month == "Jan"|
-           month == "Feb") %>% 
-  group_by(lon, lat) %>% 
-  summarise(chl = mean(chl))
+sf_use_s2(FALSE)
 
-
-wint_chl <- new_update %>% 
-  filter(month == "Jun"|
-           month == "Jul"|
-           month == "Aug") %>% 
-  group_by(lon, lat) %>% 
-  summarise(chl = mean(chl))
-
-# Inter-annual
-
-sbus <- new_update %>% 
-  filter(between(lon, 14, 20),
-         between(lat, -35, -27))
-
-nbus <- new_update %>% 
-  filter(between(lon, 11, 17),
-         between(lat, -27, -17))
-
-
+# Crop the coastline to the bounding box
+sa_coastline <- st_crop(coastline, bounding_box)
 
 library(viridis)
+library(colorspace)
 
-# Seasonal
+sum_slope <- slope %>% 
+  filter(month == "Dec"|
+           month == "Jan"|
+           month == "Feb")
 
-p1 <- ggplot(sum_chl, aes(x = lon, y = lat)) +
-  geom_tile(aes(fill = chl)) +
-  borders("world", regions = c("South Africa", "Namibia"), fill = "grey") +
-  coord_fixed(xlim = c(11, 20), ylim = c(-35, -17)) +
-  scale_fill_viridis(option = "turbo") +
-  ggtitle("Summer") +
+
+
+wint_slope <- slope %>% 
+  filter(month == "Jun"|
+           month == "Jul"|
+           month == "Aug")
+
+
+range(p.value$slope)
+
+ggplot() +
+  geom_contour(data = bath, aes(x = lon, y = lat, z = bathy), colour = "black", alpha = 0.6) +
+  geom_point(data = p.value, aes(x = lon, y = lat, col = slope)) +
+  geom_line(data = p.value, aes(x = lon, y = lat, group = group, col = slope), linewidth = 1) +
+  geom_sf(data = sa_coastline, fill = "grey80", color = "black") +
+  #coord_sf(xlim = c(17, 20), ylim = c(-35, -32)) +
+  scale_color_continuous_diverging(palette = "Green-brown", l1 = 20, l2 = 90, p1 = 0.7, p2 = 1,
+                                   rev = FALSE,
+                                   limits = c(-0.3, 0.3),
+                                   # guide = "colourbar",
+                                   guide = guide_legend(even.steps = FALSE,
+                                                        show.limits = TRUE)) +
+  #geom_text(data = area, aes(x = lon, y = lat, label = Area)) +
+  #facet_wrap(~month) +
   xlab("Longitude") +
   ylab("Latitude") +
-  labs(fill='Chlorophyll') 
+  labs(color='CHL Gradient') 
 
-ggarrange(p1, p2, ncol = 2)
-
-# Inter-annual
-
-ggplot(nbus, aes(x = lon, y = lat)) +
-  geom_tile(aes(fill = chl)) +
-  borders("world", regions = c("South Africa", "Namibia"), fill = "grey") +
-  #coord_fixed(xlim = c(14, 20), ylim = c(-35, -27)) +
-  coord_fixed(xlim = c(11, 16), ylim = c(-27, -17)) +
-  scale_fill_viridis(option = "turbo") +
-  ggtitle("NBUS") +
-  xlab("Longitude") +
-  ylab("Latitude") +
-  labs(fill='Chlorophyll') +
-  facet_wrap(~month)
   
 
 hovmoller <- new_update %>% 
