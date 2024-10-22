@@ -100,6 +100,98 @@ setwd("C:/Users/tomsp/Desktop/Masters/Practice_thesis/Masters/")
 
 chl <- readRDS("Processed_data/Chl-a/chl_climatology.Rds")
 
+our_nc_data <- nc_open("Raw_data/Full.nc")
+
+transects_func <- function(df){
+  
+  lat <- ncvar_get(our_nc_data, "latitude")
+  
+  lon <- ncvar_get(our_nc_data, "longitude")
+  
+  #get the variable in "matrix slices"
+  dist <- ncvar_get(our_nc_data) 
+  
+  lonlattime <- as.matrix(expand.grid(lon,lat))
+  
+  dist_vec <- as.vector(dist)
+  
+  df1 <- data.frame(cbind(lonlattime, dist_vec))
+  
+  df2 <- df1 %>% 
+    filter_all(any_vars(. %in% c('1')))
+  
+  colnames(df2) <- c("lon", "lat", "dist")
+  
+  
+  SA_west_coast <- df2 %>% 
+    filter(between(lon, 11, 20),
+           between(lat, -36, -17))
+  
+  #SA_west_coast <- df2 %>% 
+  #filter(between(lon, 8, 16),
+  #between(lat, -26, -18))
+  
+  
+  
+  SA_bath <- transects(SA_west_coast, spread = 60)
+  
+  
+  
+  heading2 <- data.frame(geosphere::destPoint(p = select(SA_bath, lon, lat),  
+                                              b = SA_bath$heading, d = 200000))
+  
+  # Add the new coordinates tot he site list
+  site_list <- SA_bath %>% 
+    mutate(lon_dest = heading2$lon,
+           lat_dest = heading2$lat)
+  
+  return(site_list)
+  
+}
+
+site_list <- transects_func(our_nc_data)
+
+interp <- function(rng, n) {
+  seq(rng[1], rng[2], length = n)
+}
+
+
+fix_func <- function(df, x){
+  
+  df <- df[x, ]
+  
+  
+  df2 <- data.frame(
+    
+    lon = c(df$lon, df$lon_dest),
+    lat = c(df$lat, df$lat_dest)
+  )
+  
+  
+  
+  munched <- data.frame(
+    lon = round(interp(df2$lon, 201), 2),
+    lat = round(interp(df2$lat, 201), 2),
+    dist = c(0:200),
+    group = x
+  )
+  
+  
+  return(munched)
+  
+}
+
+y <- NULL
+
+
+for(i in 1:nrow(site_list)){
+  
+  dfs <- fix_func(site_list, i)
+  y <- rbind(y, dfs)
+  
+  
+}
+
 
 bathy <- function(res){
   
@@ -210,8 +302,6 @@ final_transect <- function(df1, df2, df3) {
 slope <- final_transect(df1 = y, df2 = chl, df3 = bath)
 
 
-slope$month = factor(slope$month, levels=c('Jan','Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug',
-                                         'Sep', 'Oct', 'Nov', 'Dec'))
 
 coastline <- ne_countries(scale = "medium", returnclass = "sf", continent = "Africa")
 
@@ -239,17 +329,19 @@ wint_slope <- slope %>%
            month == "Aug")
 
 
-range(p.value$slope)
 
-ggplot() +
+
+range(wint_slope$slope)
+
+p2 <- ggplot() +
   geom_contour(data = bath, aes(x = lon, y = lat, z = bathy), colour = "black", alpha = 0.6) +
-  geom_point(data = p.value, aes(x = lon, y = lat, col = slope)) +
-  geom_line(data = p.value, aes(x = lon, y = lat, group = group, col = slope), linewidth = 1) +
+  geom_point(data = wint_slope, aes(x = lon, y = lat, col = slope)) +
+  geom_line(data = wint_slope, aes(x = lon, y = lat, group = group, col = slope), linewidth = 1) +
   geom_sf(data = sa_coastline, fill = "grey80", color = "black") +
   #coord_sf(xlim = c(17, 20), ylim = c(-35, -32)) +
   scale_color_continuous_diverging(palette = "Green-brown", l1 = 20, l2 = 90, p1 = 0.7, p2 = 1,
                                    rev = FALSE,
-                                   limits = c(-0.3, 0.3),
+                                   limits = c(-0.4, 0.4),
                                    # guide = "colourbar",
                                    guide = guide_legend(even.steps = FALSE,
                                                         show.limits = TRUE)) +
@@ -257,16 +349,33 @@ ggplot() +
   #facet_wrap(~month) +
   xlab("Longitude") +
   ylab("Latitude") +
-  labs(color='CHL Gradient') 
+  labs(color='Chlorophyll Gradient') 
+
+sum <- annotate_figure(p1, top = text_grob("Summer (DJF: 2017 - 2021)", 
+                                    color = "red", face = "bold", size = 14))
+
+wint <- annotate_figure(p2, top = text_grob("Winter (JJA: 2017 - 2021)", 
+                                            color = "red", face = "bold", size = 14))
+
+ggarrange(sum, wint, ncol = 2, common.legend = TRUE)
 
   
 
-hovmoller <- new_update %>% 
-  group_by(lat, month) %>% 
-  summarise(chl = mean(chl))
+hovmoller <- sum_slope %>% 
+  mutate(month = recode(month,
+                        "Dec" = 1,
+                        "Jan" = 2,
+                        "Feb" = 3)) %>% 
+  group_by(group, month) %>% 
+  summarise(slope = mean(slope))
+
+hovmoller$month <- as.factor(hovmoller$month)
+
+str(hovmoller)
 
 # Hovmoller Plot:
 
+range(hovmoller$group)
 
 chlTheme <- custom.theme(region= brewer.pal(n=10, 'BrBG'))
 
@@ -275,12 +384,14 @@ myTheme <- custom.theme(region=rev(brewer.pal(n=10, 'RdBu')))
 hovmoller$month1 <- match(hovmoller$month, month.abb)
 
 
- levelplot(chl ~ month1*lat,
+ chl_hov <- levelplot(slope ~ month1*group,
           data=hovmoller,
           xlab='Month', ylab='Lat',
-          par.settings=myTheme,
+          ylim=c(975, 20),
+          par.settings=chlTheme,
           aspect = 2)
 
+ ggarrange(ost_hov, chl_hov, ncol = 2)
 
 
 

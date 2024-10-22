@@ -65,7 +65,7 @@ base_map <- ggplot() +
 
 # Combine the main and inset maps
 combined_map <- ggdraw() +
-  draw_plot(base_map, 0.5, 0.5, 0.5, 0.5) +
+  draw_plot(base_map, 0.56, 0.57, 0.3, 0.5, scale = 0.7) +
   draw_plot(main_map, 0, 0, 1, 1)
 
 # Print the final combined map
