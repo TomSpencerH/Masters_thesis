@@ -1,4 +1,4 @@
-our_nc_data <- nc_open("C:/Users/tomsp/Desktop/Masters/Practice_thesis/data/Dist2Coast/Full.nc")
+our_nc_data <- nc_open("Raw_data/Full.nc")
 
   
   lat <- ncvar_get(our_nc_data, "latitude")
@@ -33,7 +33,7 @@ walvis <- SA_west_coast %>%
   mutate(Area = "Walvis Bay")
 
 luderitz <- SA_west_coast %>% 
-  filter(between(lat, -26, -25)) %>% 
+  filter(lat == -26.5) %>% 
   mutate(Area = "Luderitz")
 
 namaqua <- SA_west_coast %>% 
@@ -41,7 +41,7 @@ namaqua <- SA_west_coast %>%
   mutate(Area = "Namaqua")
 
 cc <- SA_west_coast %>% 
-  filter(between(lat, -32.2, -31.8)) %>% 
+  filter(lat == -32) %>% 
   mutate(Area = "Cape Columbine")
 
 cape_town <- SA_west_coast %>% 

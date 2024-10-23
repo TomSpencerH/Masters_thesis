@@ -294,3 +294,23 @@ ggarrange(p1, p2, ncol = 2, align = "h")
 
 
 
+
+# Previously defined upwelling cells --------------------------------------
+
+bind <- readRDS("Processed_data/SST/Standard/OSPO_full.Rds")
+
+ggplot() +
+  geom_tile(data = bind %>% 
+              filter(month == "Dec"|
+                       month == "Jan"|
+                       month == "Feb"), aes(x = lon, y = lat, fill = temp)) +
+  geom_sf(data = sa_coastline, fill = "grey80", color = "black") +
+  geom_point(data = area, aes(x = lon, y = lat), size = 3) +
+  geom_text(data = area, aes(x = lon, y = lat, label = Area), 
+            size = 3, nudge_x = 1.25, nudge_y = 0.5) +
+  scale_fill_viridis(option = "turbo") +
+  xlab("Longitude") +
+  ylab("Latitude") +
+  labs(fill = "Sea Surface Temperature") +
+  ggtitle("Upwelling Cells")
+

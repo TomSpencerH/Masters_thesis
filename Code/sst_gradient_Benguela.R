@@ -121,7 +121,7 @@ bind$lat <- round(bind$lat, 2)
 bathy <- function(res){
   
   SA_bath <- getNOAA.bathy(lon1 = 11, lon2 = 20,
-                           lat1 = -35, lat2 = -17, resolution = res)
+                           lat1 = -35, lat2 = -17, resolution = 0.6)
   
   
   SB_bath <- fortify.bathy(SA_bath)
@@ -264,13 +264,14 @@ wint_slope <- slope %>%
            month == "Jul"|
            month == "Aug")
   
+  
 
 range(sum_slope$slope)
 
-wint_osp <- ggplot() +
+ ggplot() +
   geom_contour(data = bath, aes(x = lon, y = lat, z = bathy), colour = "black", alpha = 0.6) +
-  geom_point(data = wint_slope, aes(x = lon, y = lat, col = slope)) +
-  geom_line(data = wint_slope, aes(x = lon, y = lat, group = group, col = slope), linewidth = 1) +
+  geom_point(data = sum_slope, aes(x = lon, y = lat, col = slope)) +
+  geom_line(data = sum_slope, aes(x = lon, y = lat, group = group, col = slope), linewidth = 1) +
   geom_sf(data = sa_coastline, fill = "grey80", color = "black") +
   #coord_sf(xlim = c(17, 20), ylim = c(-35, -32)) +
   scale_color_continuous_diverging(palette = "Blue-Red 3", l1 = 20, l2 = 90, p1 = 0.7, p2 = 1,
@@ -279,14 +280,16 @@ wint_osp <- ggplot() +
                                   # guide = "colourbar",
                                   guide = guide_legend(even.steps = FALSE,
                                                        show.limits = TRUE)) +
-  #geom_text(data = area, aes(x = lon, y = lat, label = Area)) +
+   geom_point(data = area, aes(x = lon, y = lat), size = 3) +
+  geom_text(data = area, aes(x = lon, y = lat, label = Area), 
+            size = 3, nudge_x = 1.25, nudge_y = 0.5) +
   #facet_wrap(~month) +
   xlab("Longitude") +
   ylab("Latitude") +
   labs(color='SST Gradient') +
   ggtitle("OSPO")
 
-
+unique(area_data$lat)
 
 p1 <- ggarrange(sum_dmi, sum_osp, sum_ost, sum_mur, ncol = 4, common.legend = TRUE)
 
